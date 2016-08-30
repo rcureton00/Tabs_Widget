@@ -78,8 +78,16 @@
   });
 
   $.extend($.prototype, {
-    html: function(str) {
-
+    // get/set the innerHTML of an element
+    html: function(newHTML) {
+      if(arguments.length) {
+        $.each(this, function(i, el) {
+          el.innerHTML = newHTML;
+        });
+        return this;
+      } else {
+        return this[0].innerHTML;
+      }
     },
     val: function(value) {
 
