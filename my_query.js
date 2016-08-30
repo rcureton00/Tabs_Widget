@@ -3,6 +3,9 @@
 
   // Create an array like object with elements from the page
   $ = function(selector) {
+    if(!(this instanceof $)) {
+      return new $(selector);
+    }
     const elements = document.querySelectorAll(selector);
 
     // Loops through elements and pushes each one into 'this'
@@ -86,11 +89,21 @@
         });
         return this;
       } else {
-        return this[0].innerHTML;
+        // if this[0] is truthy, return this[0].innerHTML
+        return this[0] && this[0].innerHTML;
       }
     },
-    val: function(value) {
 
+    // get/set the value of an element
+    val: function(newVal) {
+      if(arguments.length) {
+        $.each(this, function(i, el) {
+          el.value = newVal;
+        })
+        return this;
+      } else {
+        return this[0] && this[0].value;
+      }
     },
     text: function(str) {
 
