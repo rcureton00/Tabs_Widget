@@ -1,5 +1,8 @@
 (function() {
-  $ = function(selector) {};
+  
+  $ = function(selector) {
+
+  };
   $.extend = function(target, object) {
     for(var prop in object) {
       if(object.hasOwnProperty(prop)) {
@@ -44,15 +47,75 @@
             cb.call(val, key, val);
           }
         }
-      }
+      };
+      return collection;
     },
+
+    // Convert an array-like object into a true JS array
     makeArray: function(arr) {
+      var results = [];
+      $.each(arr, function(i, val) {
+        results.push(val);
+      })
+      return results;
+    },
+
+    // Takes a function and returns a new function that calls the
+    // original with a particular context (Similar to bind)
+    proxy: function(fn, context) {
+      return function() {
+        return fn.apply(context, arguments);
+      }
+    }
+  });
+
+  $.extend($.prototype, {
+    html: function(str) {
 
     },
-    proxy: function(fn, context) {
+    val: function(value) {
+
+    },
+    text: function(str) {
+
+    },
+    find: function(el) {
+
+    },
+    next: function() {
+
+    },
+    prev: function() {
+
+    },
+    parent: function() {
+
+    },
+    children: function() {
+
+    },
+    attr: function(attr, val) {
+
+    },
+    css: function(style, val) {
+
+    },
+    width: function() {
+
+    },
+    hide: function() {
+
+    },
+    show: function() {
 
     }
   })
+
+
+
+
+
+
 
 
 
