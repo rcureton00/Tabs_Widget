@@ -3,11 +3,19 @@
 
   // Create an array like object with elements from the page
   $ = function(selector) {
+    // Check 'this'
     if(!(this instanceof $)) {
       return new $(selector);
     }
-    const elements = document.querySelectorAll(selector);
 
+    let elements = null;
+    // If selector is 'string' :
+    if(typeof selector === 'string') {
+      elements = document.querySelectorAll(selector);
+    } else {
+      // Otherwise assume selector is 'array' :
+      elements = selector;
+    }
     // Loops through elements and pushes each one into 'this'
     // Creates a .length property on 'this'
     Array.prototype.push.apply(this, elements);
@@ -37,6 +45,21 @@
     }
     return false;
   };
+
+  const getText = function(el) {
+    const txt = '';
+    $.each(el.childNodes, function(i, childNode) {
+      // nodeType === 3 only if it is a textNode
+      if(childNode.nodeType === Node.TEXT_NODE) {
+        // nodeValue is the text on the nodeValue
+        txt += childNode.nodeValue;
+      } else if(childNode.nodeType === Node.ELEMENT_NODE) {
+        // recurse
+        txt += getText(childNode);
+      }
+    })
+    return txt;
+  }
 
   $.extend($, {
     // Determine whether the argument is an array
@@ -105,11 +128,28 @@
         return this[0] && this[0].value;
       }
     },
+
+    // get/set the text of an element
     text: function(str) {
-
+      if(arguments.length) {
+        this.html('');
+        return $.each(this, function(i, el) {
+          const text = document.createTextNode(str);
+          el.appendChild(text);
+        })
+      } else {
+        return this[0] && getText(this[0]);
+      }
     },
-    find: function(el) {
 
+    // returns items within the current element
+    find: function(selector) {
+      const elements = [];
+        $.each(this, function(i, el) {
+          const els = el.querySelectorAll(selector);
+          elements.push(els);
+        })
+      return $(elements);
     },
     next: function() {
 
