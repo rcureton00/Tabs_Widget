@@ -262,10 +262,11 @@
     },
 
     hide: function() {
-
+      this.css('display', 'none');
     },
-    show: function() {
 
+    show: function() {
+      this.css('display', '');
     }
   })
 
