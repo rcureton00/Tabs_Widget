@@ -31,7 +31,7 @@
     return target;
   };
 
-  // Static Methods
+  // Static Methods / Private Helper Functions
 
   // Determine whether the argument is LIKE an array
   // (numerical indicies & length property)
@@ -59,6 +59,23 @@
       }
     })
     return txt;
+  }
+
+  // Traverses DOM nodes. Used in parent, children, next, and prev
+  const makeTraverser = function(cb) {
+    return function() {
+      const elements = [];
+      const args = arguments;
+      $.each(this, function(i, el) {
+        const ret = cb.apply(el, args);
+        if(ret && isArrayLike(ret)) {
+          [].push.apply(elements, ret);
+        } else if (ret) {
+          elements.push(ret);
+        }
+      });
+      return $(elements);
+    };
   }
 
   $.extend($, {
@@ -147,62 +164,63 @@
       const elements = [];
         $.each(this, function(i, el) {
           const els = el.querySelectorAll(selector);
-          elements.push(els);
+          [].push.apply(elements, els);
         })
       return $(elements);
     },
 
     // returns next sibling in DOM (ignores text nodes)
-    next: function() {
-      const elements = [];
-      $.each(this, function(i, el) {
+    next: makeTraverser(function() {
         let current = el.nextSibling;
         while(current && current.nodeType !== 1) {
           current = current.nextSibling;
         }
         if(current) {
-          elements.push(current);
+          return current;
         }
-      });
-      return $(elements);
-    },
+    }),
+    // next: function() {
+    //   const elements = [];
+    //   $.each(this, function(i, el) {
+    //     let current = el.nextSibling;
+    //     while(current && current.nodeType !== 1) {
+    //       current = current.nextSibling;
+    //     }
+    //     if(current) {
+    //       elements.push(current);
+    //     }
+    //   });
+    //   return $(elements);
+    // },
 
     // returns previous sibling in DOM (ignores text nodes)
-    prev: function() {
-      const elements = [];
-      $.each(this, function(i, el) {
+    prev: makeTraverser(function() {
         let current = el.previousSibling;
         while(current && current.nodeType !== 1) {
           current = current.previousSibling;
         }
         if(current) {
-          elements.push(current);
+          return current;
         }
-      });
-      return $(elements);
-    },
+    }),
 
     // returns parent node in DOM
-    parent: function() {
-      const elements = [];
-      $.each(this, function(i, el) {
-        elements.push(el.parentNode);
-      });
-      return $(elements);
-    },
+    parent: makeTraverser(function() {
+      return this.parentNode;
+    }),
+    // parent: function() {
+    //   const elements = [];
+    //   $.each(this, function(i, el) {
+    //     elements.push(el.parentNode);
+    //   });
+    //   return $(elements);
+    // },
 
     // returns all child nodes in DOM
-    children: function() {
-      const elements = [];
-      $.each(this, function(i, el) {
-        if(el.childNodes) {
-          $.each(el.childNodes, function(i, el) {
-            elements.push(el)
-          });
-        }
-      });
-      return $(elements);
-    },
+    children: makeTraverser(function() {
+      return this.children;
+    }),
+
     attr: function(attr, val) {
 
     },
