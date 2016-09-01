@@ -221,12 +221,29 @@
       return this.children;
     }),
 
-    attr: function(attr, val) {
-
+    // get/set element properties
+    attr: function(attrName, val) {
+      if(arguments.length > 1) {
+        return $.each(this, function(i, el) {
+          el.setAttribute(attrName, val);
+        })
+      } else {
+        return this[0] && this[0].getAttribute(attrName);
+      };
     },
-    css: function(style, val) {
 
+    // get/set element style
+    css: function(cssPropName, val) {
+      if(arguments.length > 1) {
+        return $.each(this, function(i, el) {
+          el.style[cssPropName] = val;
+        })
+      } else {
+        return this[0] &&
+          document.defaultView.getComputedStyle(this[0]).getPropertyValue(cssPropName);
+      };
     },
+    
     width: function() {
 
     },
