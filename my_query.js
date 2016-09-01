@@ -151,15 +151,43 @@
         })
       return $(elements);
     },
+
+    // returns next sibling in DOM (ignores text nodes)
     next: function() {
-
+      const elements = [];
+      $.each(this, function(i, el) {
+        let current = el.nextSibling;
+        while(current && current.nodeType !== 1) {
+          current = current.nextSibling;
+        }
+        if(current) {
+          elements.push(current);
+        }
+      });
+      return $(elements);
     },
+
+    // returns previous sibling in DOM (ignores text nodes)
     prev: function() {
-
+      const elements = [];
+      $.each(this, function(i, el) {
+        let current = el.previousSibling;
+        while(current && current.nodeType !== 1) {
+          current = current.previousSibling;
+        }
+        if(current) {
+          elements.push(current);
+        }
+      });
+      return $(elements);
     },
+
+    // returns parent node in DOM
     parent: function() {
 
     },
+
+    // returns all child nodes in DOM
     children: function() {
 
     },
