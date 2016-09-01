@@ -184,12 +184,24 @@
 
     // returns parent node in DOM
     parent: function() {
-
+      const elements = [];
+      $.each(this, function(i, el) {
+        elements.push(el.parentNode);
+      });
+      return $(elements);
     },
 
     // returns all child nodes in DOM
     children: function() {
-
+      const elements = [];
+      $.each(this, function(i, el) {
+        if(el.childNodes) {
+          $.each(el.childNodes, function(i, el) {
+            elements.push(el)
+          });
+        }
+      });
+      return $(elements);
     },
     attr: function(attr, val) {
 
