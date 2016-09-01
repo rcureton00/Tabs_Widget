@@ -243,10 +243,24 @@
           document.defaultView.getComputedStyle(this[0]).getPropertyValue(cssPropName);
       };
     },
-    
-    width: function() {
 
+    // returns true width of element, excluding padding, margin, and border
+    width: function() {
+      const outerWidth = this[0].clientWidth;
+      const leftPadding = parseInt(this.css('padding-left'));
+      const rightPadding = parseInt(this.css('padding-right'));
+      return outerWidth - leftPadding - rightPadding;
     },
+
+    // returns distance of element to document top-left corner
+    offset: function() {
+      const offset = this[0].getBoundingClientRect();
+      return {
+        top:  offset.top + window.pageYOffset,
+        left: offset.left + window.pageXOffset
+      };
+    },
+
     hide: function() {
 
     },
